@@ -14,6 +14,11 @@ struct DevoteApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                
+                /*
+                 managedObjectContext in the environment stores active data context.
+                 the managedObjectContext is available for all views!
+                 */
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
