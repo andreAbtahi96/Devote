@@ -13,6 +13,9 @@ struct ContentView: View {
     @State var task: String = ""
     @State private var showNewTaskItem: Bool = false
     
+    //default is light mode
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    
     //  MARK: - FETCHING DATA
     
         // managed object context = an environment where we can manipulate core data objects entirely in RAM
@@ -48,6 +51,38 @@ struct ContentView: View {
             ZStack {
                 //  MARK: - MAIN VIEW
                 VStack {
+                    
+                    HStack(spacing: 10){
+                        // TITLE
+                        Text("Devote")
+                            .font(.system(.largeTitle, design: .rounded))
+                            .fontWeight(.heavy)
+                            .padding(.leading, 4)
+                        
+                        Spacer()
+                        
+                        // EDIT BUTTON
+                        EditButton()
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .padding(.horizontal, 10)
+                            .frame(minWidth: 70, minHeight: 26)
+                            .background(
+                                Capsule().stroke(Color.white, lineWidth: 3)
+                            )
+                        // APPEARANCE BUTTON
+                        Button(action: {
+                            // TOGGLE APPEARANCE
+                            isDarkMode.toggle()
+                            
+                        }, label: {
+                            Image(systemName: isDarkMode ? "moon.circle.fill" : "moon.circle")
+                                .frame(width: 24, height: 24)
+                                .font(.system(.title, design: .rounded))
+                        })
+                    }// HSTACK
+                    .padding()
+                    .foregroundColor(.white)
+                    
                     //  MARK: - HEADER
                     Spacer(minLength: 80)
                     
@@ -72,16 +107,7 @@ struct ContentView: View {
                     
                     List {
                         ForEach(items) { item in
-                            VStack(alignment: .leading) {
-                                
-                                Text(item.task ?? "")
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                
-                                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                                    .font(.footnote)
-                                    .foregroundColor(.gray)
-                            }// LIST ITEM
+                            ListRowItemView(item: item)
                         }
                         .onDelete(perform: deleteItems)
                     }// LIST
@@ -108,13 +134,9 @@ struct ContentView: View {
                 UITableView.appearance().backgroundColor = UIColor.clear
             }
             .navigationBarTitle("Daily Tasks", displayMode: .large)
-            .toolbar {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                #endif
-            }// TOOLBAR
+            .navigationBarHidden(true)
+            
+            
             .background(BackgroundImageView())
             .background(
                 backgroundGradient.ignoresSafeArea(.all)

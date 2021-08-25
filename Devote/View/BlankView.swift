@@ -14,7 +14,6 @@ struct BlankView: View {
     var body: some View {
         VStack{
             Spacer()
-            
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
         .background(Color.black)
